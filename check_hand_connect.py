@@ -54,6 +54,7 @@ class HandController:
     def _init_hands(self):
         # 初始化左手
         hand_type = "left"
+        # hand_type = "right"
         setting = self.left_setting
         hand_config = setting['LINKER_HAND']['LEFT_HAND']
         if hand_config.get('EXISTS', False):
@@ -84,9 +85,10 @@ class HandController:
 
                 version = api.get_embedded_version()
                 if version is None or len(version) == 0:
-                    ColorMsg(msg=f"左手 硬件版本未识别，可能设备未响应",
-                             color="red")
-                    return
+                    # ColorMsg(msg=f"左手 硬件版本未识别，可能设备未响应",
+                            #  color="red")
+                    print("请检查硬件是否正常连接")
+                    # return
 
                 self.hands[hand_type] = {
                     "joint": hand_joint,
@@ -175,7 +177,15 @@ class HandController:
             except Exception as e:
                 ColorMsg(msg=f"控制左手失败: {e}", color="red")
                 continue
-
+    def get_fingers_torque(self):
+        if not self.hands:
+            ColorMsg(msg="无可用手部，无法执行控制", color="red")
+            return 0
+        outputs = []
+        for hand_type, hand_info in self.hands.items():
+           output = hand_info["api"].hand.get_finger_torque()
+           outputs.append(output)
+        return outputs
     def close(self):
         for hand_type, hand_info in self.hands.items():
             if "bus" in hand_info and hand_info["bus"]:
@@ -185,6 +195,10 @@ class HandController:
                 except Exception as e:
                     ColorMsg(msg=f"关闭左手 CAN 总线失败: {e}", color="red")
 
+# [[39, 7, 54, 7, 0, 0, 0, 
+# 12, 6, 0, 0, 7, 0, 6, 7, 
+# 0, 0, 0, 0, 7, 191, 0, 0, 
+# 10, 0, 31, 9, 0, 0, 8]]
 def unit(num):
     #限制在0-255
     return 0 if num < 0 else 255 if num > 255 else num
@@ -212,6 +226,7 @@ if __name__ == "__main__":
             controller.control_hand(
                 left_positions=left_positions)
             print(index,index,'角度',left_positions[index])
+            print('当前扭矩',controller.get_fingers_torque())
             time.sleep(3.0)
             
             # 移到下一个索引，循环回到开始

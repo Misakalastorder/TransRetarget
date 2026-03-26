@@ -659,7 +659,8 @@ class LinkerHandL21Can:
         self.send_command(FrameProperty.MIDDLE_TORQUE,[])
         self.send_command(FrameProperty.RING_TORQUE,[])
         self.send_command(FrameProperty.LITTLE_TORQUE,[])
-        return self.x51+self.x52+self.x53+self.x54+self.x55
+        return [self.x51,self.x52,self.x53,self.x54,self.x55]
+        # return self.x51+self.x52+self.x53+self.x54+self.x55
     
     def get_torque(self):
         return self.get_finger_torque()

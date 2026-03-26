@@ -58,11 +58,11 @@ class LinkerHandApi:
         else:
             ColorMsg(msg=f"Embedded:{version}", color="green")
     
-    # Five-finger movement
+    # 五指运动
     def finger_move(self, pose=[]):
         '''
-        Five-finger movement
-        @params: pose list L7 len(7) | L10 len(10) | L20 len(20) | L25 len(25) 0~255
+        五指运动
+        @参数: pose 列表 L7 长度(7) | L10 长度(10) | L20 长度(20) | L25 长度(25) 范围 0~255
         '''
         
         if len(pose) == 0:
@@ -87,23 +87,23 @@ class LinkerHandApi:
         self.last_position = pose
 
     def _get_normal_force(self):
-        '''# Get normal force'''
+        '''# 获取法向力'''
         self.hand.get_normal_force()
     
     def _get_tangential_force(self):
-        '''# Get tangential force'''
+        '''# 获取切向力'''
         self.hand.get_tangential_force()
     
     def _get_tangential_force_dir(self):
-        '''# Get tangential force direction'''
+        '''# 获取切向力方向'''
         self.hand.get_tangential_force_dir()
     
     def _get_approach_inc(self):
-        '''# Get approach increment'''
+        '''# 获取接近增量感应数据'''
         self.hand.get_approach_inc()
     
     def set_speed(self, speed=[100]*5):
-        '''# Set speed'''
+        '''# 设置速度'''
         has_non_int = any(not isinstance(x, (int, float)) or x < 0 or x > 255 for x in speed)
         if has_non_int:
             print("Set Speed The numerical range can only be positive integers or floating-point numbers between 0 and 255", flush=True)
@@ -118,16 +118,16 @@ class LinkerHandApi:
         self.hand.set_speed(speed=speed)
     
     def set_joint_speed(self, speed=[100]*5):
-        '''Set speed by topic'''
+        '''通过话题设置速度'''
         if len(speed) == 0:
             return
         if any(not isinstance(x, (int, float)) or x < 10 or x > 255 for x in speed):
-            ColorMsg(msg=f"The numerical range cannot be less than 10 or greater than 255",color="red")
+            ColorMsg(msg=f"数值范围不能小于 10 或大于 255",color="red")
             return
         self.hand.set_speed(speed=speed)
     
     def set_torque(self, torque=[180] * 5):
-        '''Set maximum torque'''
+        '''设置最大力矩限制'''
         has_non_int = any(not isinstance(x, (int, float)) or x < 0 or x > 255 for x in torque)
         if has_non_int:
             print("Set Torque The numerical range can only be positive integers or floating-point numbers between 0 and 255", flush=True)
@@ -146,9 +146,9 @@ class LinkerHandApi:
     
     
     def set_current(self, current=[250] * 5):
-        '''Set current L7/L10/L25 not supported'''
+        '''设置电流 L7/L10/L25 不支持'''
         if any(not isinstance(x, (int, float)) or x < 0 or x > 255 for x in current):
-            print("Set Current The numerical range can only be positive integers or floating-point numbers between 0 and 255", flush=True)
+            print("设置电流数值范围只能是 0 到 255 之间的正整数或浮点数", flush=True)
             return
         if self.hand_joint == "L20":
             return self.hand.set_current(current=current)
@@ -156,22 +156,22 @@ class LinkerHandApi:
             pass
 
     def get_embedded_version(self):
-        '''Get embedded version'''
+        '''获取固件版本'''
         return self.hand.get_version()
     
     def get_current(self):
-        '''Get current'''
+        '''获取电流'''
         return self.hand.get_current()
     
     def get_state(self):
-        '''Get current joint state'''
+        '''获取当前关节状态'''
         return self.hand.get_current_status()
     
     def get_state_for_pub(self):
         return self.hand.get_current_pub_status()
     
     def get_speed(self):
-        '''Get speed'''
+        '''获取速度'''
         return self.hand.get_speed()
     
     def get_joint_speed(self):
@@ -192,11 +192,11 @@ class LinkerHandApi:
             return self.hand.get_speed()
 
     def get_touch_type(self):
-        '''Get touch type'''
+        '''获取触觉类型'''
         return self.hand.get_touch_type()
     
     def get_force(self):
-        '''Get normal force, tangential force, tangential force direction, approach sensing data'''
+        '''获取法向力、切向力、切向力方向、接近感应数据'''
         self._get_normal_force()
         self._get_tangential_force()
         self._get_tangential_force_dir()
@@ -217,6 +217,8 @@ class LinkerHandApi:
         '''Get current maximum torque'''
         return self.hand.get_torque()
     
+
+
     def get_temperature(self):
         '''Get current motor temperature'''
         return self.hand.get_temperature()
